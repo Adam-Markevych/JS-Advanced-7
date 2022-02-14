@@ -1,0 +1,93 @@
+<div class="block_signIn" *ngIf="block_signin">
+    <div class="block_signIn__header">
+        <div class="title">
+            <h1 *ngIf="siIn">Sign In</h1>
+            <h1 *ngIf="siUp">Sign Up</h1>
+        </div>
+    </div>
+    <div class="block_signIn__main">
+        <ng-container *ngIf="usName">
+        <p>Username</p>
+        <input type="text" [(ngModel)]="signIn_username">
+        </ng-container>
+        <p>Email</p>
+        <input type="email" [(ngModel)]="signIn_email">
+        <p>Password</p>
+        <input type="text" [(ngModel)]="signIn_password">
+    </div>
+    <div class="block_signIn__footer">
+        <button type="submit" class="btn-close" (click)="btnClose()">Close</button>
+        <button *ngIf="sumAdmin" class="btn-admin" type="submit" (click)="btnSubmit()" [disabled] = "disabledSubmit">Submit</button>
+        <button *ngIf="sumUser" class="btn-user" type="submit" (click)="btnSubmitUser()" [disabled] = "disabledSubmit1">Submit</button>
+    </div>
+ </div>
+
+
+<div class="block-back" *ngIf="block_back">
+
+</div>
+
+<div class="block_Add" *ngIf="block_Add">
+    <div class="title">
+        <h1>Add post</h1>
+    </div>
+    <div class="block_Add__main">
+        <p>Title</p>
+        <input type="email" [(ngModel)]="title" >
+        <p>Text:</p>
+        <textarea [(ngModel)]="text"></textarea>
+    </div>
+    <div class="block_Add__footer">
+        <button type="submit" class="btn-close" (click)="btnClose()">Close</button>
+        <button type="submit" class="btn-post" (click)="btnPost()" *ngIf="post" [disabled] = "disabledSubmit">Post</button>
+        <button type="submit"  class="btn-post" (click)="btnSavePost()" *ngIf="edit_Post">Edit Post</button>
+    </div>
+</div>
+
+
+<div class="header">
+    <div class="logotype">
+        <h2>Angular block</h2>
+    </div>
+    <div class="menu" *ngIf="menu1">
+        <button type="submit" (click)="btnSignIn()" class="btn_sign-in">Sign in</button>
+        <button type="submit" (click)="btnSignUp()" class="btn_sign-up">Sign up</button>
+    </div>
+    <div class="menu" *ngIf="menu2">
+        <button type="submit" (click)="btnAddPost()" class="btn_add-post">Add post</button>
+        <div class="user">{{ saveName }}</div>
+        <button type="submit" (click)="btnSignOut()" class="btn_sign-out">Sign Out</button>
+    </div>
+</div>
+<main>
+    <div class="container">
+        <div class="blogs"   *ngFor="let b of blog; index as i" >
+            <div class="info">
+                <h1>{{ b.topic }}</h1>
+                <p>posted by: {{ b.postedBy }}</p>
+                <p>{{ b.message }}</p>
+            </div>
+            <div class="time">
+                <div class="time__time">
+                    <p>10:00</p>
+                </div>
+                <div class="btns"  *ngIf="block_btnsAdmin">
+                    <button type="submit" (click)="editPost(i)" class="btn-edit">Edit</button>
+                    <button type="submit" (click)="btnDelete(i)" class="btn-delete">Delete</button>
+                </div>
+    
+                <ng-container *ngIf="b.postedBy != 'admin'; else elseTemplate">
+                    <div class="btns"  *ngIf="b.postedBy === saveName">
+                        <button type="submit" (click)="editPost(i)" class="btn-edit">Edit</button>
+                        <button type="submit" (click)="btnDelete(i)" class="btn-delete">Delete</button>
+                    </div>
+                </ng-container>
+                <ng-template #elseTemplate>
+                    <div class="btns">
+                    </div>
+                </ng-template>
+                
+            </div>
+        </div>
+    </div>
+</main>
