@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class SerService {
- // public data = new Date();
+ public dat = `${new Date().getHours()}:${new Date().getMinutes()}`;
  public users = [
   {
     id: Math.floor(Math.random() * 1000),
@@ -19,11 +19,11 @@ export class SerService {
       id: Math.floor(Math.random() * 1000),
       postedBy: 'Admin',
       topic: 'first post',
-      data: '10:00',
+      data: `${new Date().getHours()}:${new Date().getMinutes()}`,
       message: 'Sign up to create your account and start to use Angular'
     }
   ];
- 
+  constructor() { }
 
   getDiscounts(): Array<any> {
     return this.blogs;
@@ -33,7 +33,6 @@ export class SerService {
     this.blogs.push(blog);
   }
   deletePost(id: number): void {
-    // const index = this.blogs.findIndex(blogs => blogs.id === id);
     this.blogs.splice(id, 1);
   }
   EditPost(dis: any, id: number): void {
@@ -42,9 +41,5 @@ export class SerService {
   addUser(user: any): void {
     this.users.push(user);
   }
-  // deleteDiscount(id: number): void {
-  //   const index = this.discounts.findIndex(discount => discount.id === id);
-  //   this.discounts.splice(index, 1);
-  // }
-  constructor() { }
+ 
 }

@@ -8,12 +8,12 @@
     <div class="block_signIn__main">
         <ng-container *ngIf="usName">
         <p>Username</p>
-        <input type="text" [(ngModel)]="signIn_username">
+        <input (input)="checkUserName()"  type="text" [(ngModel)]="signIn_username">
         </ng-container>
         <p>Email</p>
-        <input type="email" [(ngModel)]="signIn_email">
+        <input (input)="checkEmail()" type="email" [(ngModel)]="signIn_email">
         <p>Password</p>
-        <input type="text" [(ngModel)]="signIn_password">
+        <input (input)="checkPassword()" type="password" [(ngModel)]="signIn_password">
     </div>
     <div class="block_signIn__footer">
         <button type="submit" class="btn-close" (click)="btnClose()">Close</button>
@@ -69,7 +69,7 @@
             </div>
             <div class="time">
                 <div class="time__time">
-                    <p>10:00</p>
+                    <p>{{ b.data }}</p>
                 </div>
                 <div class="btns"  *ngIf="block_btnsAdmin">
                     <button type="submit" (click)="editPost(i)" class="btn-edit">Edit</button>

@@ -1,13 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { SerService } from 'src/app/service/ser.service';
 
-
 @Component({
   selector: 'app-blog',
   templateUrl: './blog.component.html',
   styleUrls: ['./blog.component.scss']
 })
+
 export class BlogComponent implements OnInit {
+
+  public data = this.SerService.dat;
+
+  public userregxp: RegExp = /^[a-zA-z]{3,16}$/; 
+  public passregxp: RegExp = /^[a-zA-Z0-9_]{4,16}$/;
+  public emailregxp: RegExp = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+
+  public userExp: any; 
+  public passExp: any;
+  public emailExp: any;
+
 
   public blog = this.SerService.blogs;
   public user = this.SerService.users;
@@ -34,8 +45,8 @@ export class BlogComponent implements OnInit {
   public siIn = false;
   public siUp = false;
 
-  public disabledSubmit = false;
-  public disabledSubmit1 = false;
+  public disabledSubmit = true;
+  public disabledSubmit1 = true;
 
   public title!: string;
   public text!: string;
@@ -50,6 +61,40 @@ export class BlogComponent implements OnInit {
     console.log(this.SerService.blogs)
   }
 
+  checkUserName(): void {
+    this.userExp = this.userregxp.test(this.signIn_username);
+    if(this.userExp){
+      this.disabledSubmit = false;
+      this.disabledSubmit1 = false;
+    } 
+    else {
+      this.disabledSubmit = true;
+      this.disabledSubmit1 = true;
+    }
+  }
+   checkPassword(): void {
+    this.passExp = this.passregxp.test(this.signIn_password);
+    if(this.passExp){
+     this.disabledSubmit = false;
+     this.disabledSubmit1 = false;
+    } 
+    else {
+      this.disabledSubmit = true;
+      this.disabledSubmit1 = true;
+    }
+  }
+  checkEmail(): void{
+    this.emailExp = this.emailregxp.test(this.signIn_email);
+    if(this.emailExp){
+      this.disabledSubmit = false;
+      this.disabledSubmit1 = false;
+     
+    } 
+    else {
+      this.disabledSubmit = true;
+      this.disabledSubmit1 = true;
+    }
+  }
   btnSignIn(): void {
     this.block_signin = true;
     this.block_back = true;
@@ -83,23 +128,30 @@ export class BlogComponent implements OnInit {
   }
 
   btnSubmit(): void {
-    if(this.signIn_email == 'admin@gmail.com' && this.signIn_password == 'admin') {
-      this.block_signin = false;
-      this.block_back = false;
-      this.menu2 = true;
-      this.menu1 = false;
-      this.block_btnsAdmin = true;
-      this.signIn_email = '';
-      this.signIn_password = '';
-      this.siIn = false;
-      this.siUp = false;
-      this.saveName = 'admin';
-      this.sumAdmin = false;
+  if(this.signIn_email != '' && this.signIn_password != '' &&
+    this.emailExp && this.passExp){
+      this.disabledSubmit = false;
+      if(this.signIn_email == 'admin@gmail.com' && this.signIn_password == 'admin') {
+        this.block_signin = false;
+        this.block_back = false;
+        this.menu2 = true;
+        this.menu1 = false;
+        this.block_btnsAdmin = true;
+        this.signIn_email = '';
+        this.signIn_password = '';
+        this.siIn = false;
+        this.siUp = false;
+        this.saveName = 'admin';
+        this.sumAdmin = false;
+      }else{
+        this.disabledSubmit = true;
+        alert('Неправельно введено пароль або пошту');
+      }
     }else{
       this.disabledSubmit = true;
-      this.disabledSubmit = false;
-      alert('Неправельно введено пароль або пошту');
+
     }
+   
   }
   btnSignOut(): void {
     this.block_btnsAdmin = false;
@@ -121,7 +173,7 @@ export class BlogComponent implements OnInit {
         id: 1,
         postedBy: this.saveName, 
         topic: this.title,
-        data: '10:00',
+        data: this.data,
         message: this.text
       }
     
@@ -136,34 +188,41 @@ export class BlogComponent implements OnInit {
    
   }
   btnSubmitUser(): void {
-  if(this.user.find(name => name.userName == this.signIn_username || name.email == this.signIn_email)){
-    alert('Такий користувач вже інує');
-  }
-  else if(this.signIn_email.length === 0 || this.signIn_password.length === 0 || this.signIn_username.length === 0 ){
-    alert('Заповніть всі поля!!!');
-  }
-  else{
-    this.block_btnsUser = false;
-    const objUser = {
-      id: Math.floor(Math.random() * 1000),
-      userName: this.signIn_username,
-      email: this.signIn_email,
-      password: this.signIn_password,
+    if(this.signIn_email != '' && this.signIn_password != '' && this.signIn_username != '' &&
+    this.emailExp && this.passExp && this.userExp){
+      this.disabledSubmit1 = false;
+      if(this.user.find(name => name.userName == this.signIn_username || name.email == this.signIn_email)){
+        this.disabledSubmit1 = true;
+        alert('Такий користувач вже інує');
+      }else{
+        this.block_btnsUser = false;
+        const objUser = {
+          id: Math.floor(Math.random() * 1000),
+          userName: this.signIn_username,
+          email: this.signIn_email,
+          password: this.signIn_password,
+        }
+        this.saveName = this.signIn_username;
+        this.SerService.addUser(objUser);
+        this.menu2 = true;
+        this.menu1 = false;
+        this.signIn_email = '';
+        this.signIn_username = '';
+        this.signIn_password = '';
+        this.sumUser = false;
+        this.block_Add = false;
+        this.block_back = false;
+        this.block_signin = false;
+        this.usName = false;
+        this.siIn = false;
+        this.siUp = false;
+      }
+
+    }else{
+      this.disabledSubmit1 = true;
+      
     }
-    this.saveName = this.signIn_username;
-    this.SerService.addUser(objUser);
-    this.menu2 = true;
-    this.menu1 = false;
-    this.signIn_email = '';
-    this.signIn_username = '';
-    this.signIn_password = '';
-    this.block_Add = false;
-    this.block_back = false;
-    this.block_signin = false;
-    this.usName = false;
-    this.siIn = false;
-    this.siUp = false;
-   }
+
   }
 
   editPost(index: number): void {
